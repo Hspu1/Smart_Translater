@@ -1,0 +1,19 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E128" />
+          <option value="E127" />
+          <option value="E124" />
+          <option value="E125" />
+          <option value="E122" />
+          <option value="E131" />
+          <option value="E501" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyShadowingNamesInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
+  </profile>
+</component>

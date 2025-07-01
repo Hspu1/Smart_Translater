@@ -2,10 +2,13 @@ from fastapi.responses import ORJSONResponse
 from uvicorn import run
 from fastapi import FastAPI
 
+from .core import lifespan
+
 
 app = FastAPI(
     title="Smart Translater",
-    default_response_class=ORJSONResponse
+    default_response_class=ORJSONResponse,
+    lifespan=lifespan
 )
 
 
