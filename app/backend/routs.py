@@ -3,9 +3,11 @@ from typing import Annotated
 from fastapi import APIRouter, Request, Depends
 from sqlalchemy import insert
 from deep_translator import GoogleTranslator
+from sqlalchemy.exc import IntegrityError
 
 from app.backend.schemas import TranslatedRequest
-from app.core import async_session_maker, UserModel
+from app.core import async_session_maker, UserModel, TranslationModel
+from app.utils import logger
 
 generate_user_id_router = APIRouter()
 translater_router = APIRouter()
@@ -37,7 +39,8 @@ async def translater(
     cached_data = await redis.get(key)
     if cached_data is not None:
         return {
-            "translated_text": cached_data
+            "translated_text": cached_data,
+            "cached": True
         }
 
     translated = (
@@ -45,4 +48,23 @@ async def translater(
             input_data.original_text)
     )
 
-    return translated
+    await redis.set(key, translated, ex=86400)
+
+    translated_data = TranslationModel(
+        user_id=input_data.user_id, original_word=input_data.original_text,
+        translated_word=translated
+    )
+    if len(input_data.original_text) <= 25:
+        try:
+            async with async_session_maker() as session:
+                async with session.begin():
+                    session.add(translated_data)
+
+        except IntegrityError as e:
+            # при написании таблиц был добавлен уникальный констрейнт
+            logger.warning(f"IntegrityError при сохранении перевода: {e}")
+
+    return {
+        "translated_text": translated,
+        "cached": False
+    }
