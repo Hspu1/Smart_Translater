@@ -2,7 +2,8 @@ from fastapi.responses import ORJSONResponse
 from uvicorn import run
 from fastapi import FastAPI
 
-from .core import lifespan
+from app.core import lifespan
+from app.backend import generate_user_id_router
 
 
 app = FastAPI(
@@ -10,6 +11,7 @@ app = FastAPI(
     default_response_class=ORJSONResponse,
     lifespan=lifespan
 )
+app.include_router(generate_user_id_router)
 
 
 if __name__ == '__main__':
