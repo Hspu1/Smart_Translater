@@ -16,6 +16,7 @@ dependencies = [
     "orjson (>=3.10.18,<4.0.0)",
     "alembic (>=1.16.2,<2.0.0)",
     "asyncpg (>=0.30.0,<0.31.0)"
+    # deep-translator через pip так как с poetry установить не удалось
 ]
 
 
